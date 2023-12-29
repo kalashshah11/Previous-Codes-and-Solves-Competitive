@@ -1,0 +1,151 @@
+#include <bits/stdc++.h>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <cstring>
+#include <chrono>
+#include <complex>
+#define priority_queue < ll, std::vector<ll>, std::greater<ll> > mnheap;    // mnheap.push(), mnheap.top(), mnheap.pop()
+#define REP(i,a,b) for (auto i = a; i != b; i++)
+#define ll long long int
+#define ld long double
+#define vi vector<int>
+#define vll vector<ll>
+#define vvi vector < vi >
+#define pii pair<int,int>
+#define pll pair<long long, long long>
+#define mod 1000000007
+#define inf 1000000000000000001
+#define all(c) c.begin(),c.end()
+#define rall(c) c.rbegin(),c.rend()
+#define mp(x,y) make_pair(x,y)
+#define mem(a,val) memset(a,val,sizeof(a))
+#define eb emplace_back
+#define f first
+#define s second
+#define pb push_back
+#define SQ(a) (a)*(a)
+ 
+using namespace std;
+            
+        
+void read(int n,vector<int>& x)
+{
+    x.clear();
+    x.resize(n);
+    for(int i = 0;i<n;i++)
+    {
+        cin>>x[i];
+    }
+    
+}
+void read(int n,int m,vector<vector<int>>& x)
+{
+    x.clear();
+    x.resize(n,vector<int>(m));
+    for(int i = 0;i<n;i++)
+    {
+        for(int j = 0 ;j<m;j++)
+            cin>>x[i][j];
+    }
+}
+void read(int n,vector<vector<int>>& x)
+{
+    x.clear();
+    x.resize(n+1);
+    for(int i = 0;i<n-1;i++)
+    {
+         int a,b;
+         cin>>a>>b;
+         x[a].pb(b);
+         x[b].pb(a);
+    }
+}
+void read(int n,vector<vector<int>>& x,int m)
+{
+    x.clear();
+    x.resize(n+1);
+    for(int i = 0;i<m;i++)
+    {
+         int a,b;
+         cin>>a>>b;
+         x[a].pb(b);
+         x[b].pb(a);
+    }
+}
+void read(int n,vector<ll>& x)
+{
+    x.clear();
+    x.resize(n);
+    for(int i = 0;i<n;i++)
+    {
+        cin>>x[i];
+    }
+}
+int main()
+{
+    std::ios::sync_with_stdio(false);
+    int T = 1;
+    cin>>T;
+    // cout<<"Case #"<<t;
+    for(int t = 1;t<=T;t++)
+    {
+        ll n,m;
+		cin>>n>>m;
+		vector<ll> a(n);
+		read(n,a);
+		ll ans = 0;
+		ll count = 0;
+		ll minimum = mod;
+		ll currsum = 0;
+        vector<pair<ll,ll>> mincount;
+		for(ll i = 0;i<n;i++){
+			if(a[i] >= minimum){
+				if(a[i]%minimum == 0){
+					count++;
+				}
+				else{
+					ans += min(minimum,m)*(count - 1);
+					ans += m;
+                    mincount.pb({minimum,count});
+					minimum = a[i];
+					count = 1;
+				}
+			}
+			else{
+				if(minimum%a[i] == 0){
+                    while(!mincount.empty()){
+                        auto it = mincount.back();
+                        if(it.first%a[i] == 0){
+                            mincount.pop_back();
+                            ans -= m;
+                            ans -= min(it.first,m)*(it.second-1);
+                            count += it.second;
+                        }
+                        else{
+                            break;
+                        }
+                    }
+					minimum = a[i];
+					count++;
+				}
+				else{
+					ans += min(minimum,m)*(count-1);
+                    if(a[i]%a[i-1] == 0 || a[i-1]%a[i] == 0)
+					    ans += min(min(a[i],a[i-1]),m);
+                    else{
+                        ans += min(min(a[i],a[i-1]),m);
+                    }
+                    mincount.pb({minimum,count});
+					minimum = a[i];
+					count = 1;
+				}
+			}
+			// cout<<minimum<<" "<<count<<endl;
+		}
+		ans += min(minimum,m)*(count - 1);
+		cout<<ans<<endl;
+    }
+
+    return 0;
+}
